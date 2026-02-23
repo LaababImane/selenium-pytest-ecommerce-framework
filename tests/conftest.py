@@ -6,23 +6,27 @@ from selenium.webdriver.chrome.options import Options
 
 @pytest.fixture(scope="function")
 def driver():
-    brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+    
     options = Options()
-    options.binary_location = brave_path
-    options.add_argument("--start-maximized")
 
-    # Anti-detection arguments
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option("useAutomationExtension", False)
+    if os.environ.get("CI"):
+        options.add_argument("--headless")
+        options.add_argument("no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+
+    else:
+        brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+        options.binary_location = brave_path
+        options.add_argument("--start-maximized")
+
+        # Anti-detection arguments
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
 
     driver = webdriver.Chrome(options=options)
-
-    # Hide webdriver fingerprint
-    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-        "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-    })
-
+    
     yield driver
     driver.quit()
 
