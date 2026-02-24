@@ -14,7 +14,11 @@ class BasePage:
     
     def click(self, locator):
         element = self.find(locator)
-        element.click()
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        try:
+            element.click()
+        except:
+             self.driver.execute_script("arguments[0].click();", element)
     
     def type(self, locator, text):
         element = self.find(locator)

@@ -25,6 +25,13 @@ def driver():
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option("useAutomationExtension", False)
 
+    # Disable password manager popup
+    options.add_experimental_option("prefs", {
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False,
+        "profile.password_manager_leak_detection": False
+    })
+
     driver = webdriver.Chrome(options=options)
     
     yield driver

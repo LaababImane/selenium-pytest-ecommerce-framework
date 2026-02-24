@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
@@ -52,3 +54,10 @@ class HomePage(BasePage):
 
     def click_first_product(self):
         self.click(self.PRODUCTS)
+
+    def click_product_by_name(self, name):
+        time.sleep(5)  # wait for products to load
+        product = (By.XPATH, f"//a[text()='{name}']")
+        element = self.wait.until(EC.presence_of_element_located(product))
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        self.driver.execute_script("arguments[0].click();", element)
