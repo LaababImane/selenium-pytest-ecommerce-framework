@@ -1,0 +1,2 @@
+
+Cart items: ['Samsung galaxy s6']
